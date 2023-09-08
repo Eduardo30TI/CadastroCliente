@@ -54,23 +54,29 @@ def main():
 
                     pass
 
-                temp_dict['razao_social']=st.text_input('Razão Social',value=dados['nome'],disabled=True).upper()
-                temp_dict['fantasia']=st.text_input('Nome Fantasia',value=dados['fantasia'],disabled=True).upper()
-                temp_dict['situacao']=col2.text_input('Situação',value=dados['situacao'],disabled=True).upper()
+                temp_dict['razao_social']=st.text_input('Razão Social',value=dados['nome']).upper()
+                temp_dict['fantasia']=st.text_input('Nome Fantasia',value=dados['fantasia']).upper()
+                temp_dict['situacao']=col2.text_input('Situação',value=dados['situacao']).upper()
 
-                temp_dict['logradouro']=st.text_input('Endereço',value=dados['logradouro'],disabled=True).upper()
+                temp_dict['logradouro']=st.text_input('Endereço',value=dados['logradouro']).upper()
                 col3,col4=st.columns(2)
-                temp_dict['cep']=col3.text_input('CEP',value=dados['cep'],disabled=True).upper()
-                temp_dict['numero']=col4.text_input('Número',value=dados['numero'],disabled=True).upper()
+                temp_dict['cep']=col3.text_input('CEP',value=dados['cep']).upper()
+                temp_dict['numero']=col4.text_input('Número',value=dados['numero']).upper()
 
                 col5,col6,col7=st.columns(3)
-                temp_dict['bairro']=col5.text_input('Bairro',value=dados['bairro'],disabled=True).upper()
-                temp_dict['municipio']=col6.text_input('Cidade',value=dados['municipio'],disabled=True).upper()
-                temp_dict['uf']=col7.text_input('UF',value=dados['uf'],disabled=True).upper()
-                temp_dict['complemento']=st.text_input('Complemento',value=dados['complemento'],disabled=True).upper()
+                temp_dict['bairro']=col5.text_input('Bairro',value=dados['bairro']).upper()
+                temp_dict['municipio']=col6.text_input('Cidade',value=dados['municipio']).upper()
+                temp_dict['uf']=col7.text_input('UF',value=dados['uf']).upper()
+                temp_dict['complemento']=st.text_input('Complemento',value=dados['complemento']).upper()
 
-                temp_dict['email']=st.text_input('E-mail',value=str(dados['email']).upper(),disabled=True).upper()
-                temp_dict['telefone']=st.text_input('Telefone',value=dados['telefone'],disabled=True).upper()
+                temp_dict['email']=st.text_input('E-mail').upper()
+                temp_dict['telefone']=st.text_input('Telefone',placeholder='Inseir o DDD + Número').upper()
+
+                temp_path=os.path.join(os.getcwd(),'Base','Segmento.xlsx')
+                temp_df=pd.read_excel(temp_path)
+                lista=temp_df['Segmento'].unique().tolist()
+                temp_dict['segmento']=st.selectbox(label='Segmento',options=lista)
+                temp_dict['horario']=st.time_input(label='Horário de Entrega')
 
                 btn=st.button('Enviar',key='btn_send')
 
