@@ -1,6 +1,7 @@
 from Acentos import Acentuacao
 from CNPJ import CNPJ
 from Gmail import Mail
+from CEP import CEP
 import streamlit as st
 from streamlit_js_eval import streamlit_js_eval
 import time
@@ -42,7 +43,7 @@ def main():
             else:
 
                 cnpj=CNPJ(temp_dict['cnpj'])
-                dados=cnpj.GetCNPJ()
+                dados=cnpj.GetDados()
 
                 for c in ['cep','numero']:
 
@@ -54,19 +55,28 @@ def main():
 
                     pass
 
-                temp_dict['razao_social']=st.text_input('Razão Social',value=dados['nome']).upper()
-                temp_dict['fantasia']=st.text_input('Nome Fantasia',value=dados['fantasia']).upper()
-                temp_dict['situacao']=col2.text_input('Situação',value=dados['situacao']).upper()
-
-                temp_dict['logradouro']=st.text_input('Endereço',value=dados['logradouro']).upper()
+                temp_dict['razao_social']=st.text_input('Razão Social',value=dados['razao_social']).upper()
+                temp_dict['fantasia']=st.text_input('Nome Fantasia',value=dados['nome_fantasia']).upper()
+                temp_dict['situacao']=col2.text_input('Situação',value=dados['descricao_situacao_cadastral']).upper()
+                
                 col3,col4=st.columns(2)
                 temp_dict['cep']=col3.text_input('CEP',value=dados['cep']).upper()
                 temp_dict['numero']=col4.text_input('Número',value=dados['numero']).upper()
+                cep_dict=CEP.GetCEP(temp_dict['cep'])
+
+                for k,v in cep_dict.items():
+
+                    cep_dict[k]=Acentuacao.RemoverAcento(v).upper()
+
+                    pass
+
+                temp_dict['logradouro']=st.text_input('Endereço',value=cep_dict['logradouro']).upper()
 
                 col5,col6,col7=st.columns(3)
-                temp_dict['bairro']=col5.text_input('Bairro',value=dados['bairro']).upper()
-                temp_dict['municipio']=col6.text_input('Cidade',value=dados['municipio']).upper()
-                temp_dict['uf']=col7.text_input('UF',value=dados['uf']).upper()
+                
+                temp_dict['bairro']=col5.text_input('Bairro',value=cep_dict['bairro']).upper()
+                temp_dict['municipio']=col6.text_input('Cidade',value=cep_dict['cidade']).upper()
+                temp_dict['uf']=col7.text_input('UF',value=cep_dict['uf']).upper()
                 temp_dict['complemento']=st.text_input('Complemento',value=dados['complemento']).upper()
 
                 temp_dict['email']=st.text_input('E-mail').upper()
@@ -77,7 +87,7 @@ def main():
                 lista=temp_df['Segmento'].unique().tolist()
                 temp_dict['segmento']=st.selectbox(label='Segmento',options=lista)
                 temp_dict['horario']=st.time_input(label='Horário de Entrega')
-
+                
                 btn=st.button('Enviar',key='btn_send')
 
                 if btn==True:
@@ -93,6 +103,12 @@ def main():
                         pass
 
                     else:
+
+                        for k,v in temp_dict.items():
+
+                            temp_dict[k]=Acentuacao.RemoverAcento(v).upper()
+
+                            pass
 
                         path_base=os.path.join(os.getcwd(),temp_dict['cnpj'])
                         os.makedirs(path_base,exist_ok=True)
