@@ -104,12 +104,6 @@ def main():
 
                     else:
 
-                        for k,v in temp_dict.items():
-
-                            temp_dict[k]=Acentuacao.RemoverAcento(v).upper()
-
-                            pass
-
                         path_base=os.path.join(os.getcwd(),temp_dict['cnpj'])
                         os.makedirs(path_base,exist_ok=True)
                         temp_path=os.path.join(path_base,'Cadastro.xlsx')
