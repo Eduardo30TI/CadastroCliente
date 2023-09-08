@@ -24,7 +24,7 @@ def main():
         st.header('Cadastro de Cliente')
         st.markdown('----')
 
-        temp_dict['consultor']=st.text_input('E-mail Consultor')
+        temp_dict['consultor']=st.text_input('E-mail Consultor',placeholder='Inserir o e-mail do vendedor que te atendeu')
         
         col1,col2=st.columns(2)
         temp_dict['cnpj']=col1.text_input(label='CNPJ',placeholder='Digite o CNPJ')
