@@ -11,8 +11,22 @@ from glob import glob
 import pandas as pd
 from datetime import datetime
 import shutil
+from PIL import Image
 
 mail=Mail()
+
+temp_path=os.path.join(os.getcwd(),'Icone','*.*')
+icone=glob(temp_path)
+
+if len(icone)>0:
+
+    with open(icone[-1],'rb') as file:
+
+        st.set_page_config(page_title='DeMarchi SP',page_icon=file.read(),layout='centered')
+
+        pass
+
+    pass
 
 def main():
 
@@ -26,6 +40,38 @@ def main():
         st.markdown('----')
 
         temp_dict['consultor']=st.text_input('E-mail Consultor',placeholder='Inserir o e-mail do vendedor que te atendeu')
+        
+        imagens=st.file_uploader('Pedido',accept_multiple_files=True,key='upload',type=['.png','.jpg','.jpeg'])
+
+        #converter imagem em pdf
+        for imagem in imagens:
+            
+            if temp_dict['consultor']=='':
+                                
+                continue
+
+            temp_path=os.path.join(os.getcwd(),temp_dict['consultor'])
+            os.makedirs(temp_path,exist_ok=True)
+
+            with open(imagem.name,'wb') as file:
+
+                file.write(imagem.getbuffer())
+                
+                pass
+
+            with Image.open(imagem.name) as file:
+
+                arq_name=str(imagem.name).split('.')[0]
+
+                img_convert=file.convert('RGB')
+                temp_path=os.path.join(temp_path,arq_name)
+                img_convert.save(f'{temp_path}.pdf')
+                
+                pass
+
+            os.remove(imagem.name)
+
+            pass
         
         col1,col2=st.columns(2)
         temp_dict['cnpj']=col1.text_input(label='CNPJ',placeholder='Digite o CNPJ')
@@ -104,7 +150,7 @@ def main():
 
                     else:
 
-                        path_base=os.path.join(os.getcwd(),temp_dict['cnpj'])
+                        path_base=os.path.join(os.getcwd(),temp_dict['consultor'])
                         os.makedirs(path_base,exist_ok=True)
                         temp_path=os.path.join(path_base,'Cadastro.xlsx')
 
@@ -135,7 +181,7 @@ def main():
                         """
 
                         anexo=glob(temp_path)
-                        email_dict={'To':[temp_dict['consultor']],'CC':['raquel@demarchisaopaulo.com.br'],'Anexo':anexo}
+                        email_dict={'To':[temp_dict['consultor']],'CC':['cadastro@demarchisaopaulo.com.br'],'Anexo':anexo}
                         mail.Enviar(assunto=assunto,mensagem=mensagem,info=email_dict)
 
                         mensagem=st.success('E-mail enviado com sucesso')
