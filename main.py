@@ -180,6 +180,7 @@ def main():
                         
                         """
 
+                        temp_path=os.path.join(path_base,'*.*')
                         anexo=glob(temp_path)
                         email_dict={'To':[temp_dict['consultor']],'CC':['cadastro@demarchisaopaulo.com.br'],'Anexo':anexo}
                         mail.Enviar(assunto=assunto,mensagem=mensagem,info=email_dict)
